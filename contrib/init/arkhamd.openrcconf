@@ -1,0 +1,33 @@
+# /etc/conf.d/arkhamd: config file for /etc/init.d/arkhamd
+
+# Config file location
+#ARKHAMD_CONFIGFILE="/etc/arkham/arkham.conf"
+
+# What directory to write pidfile to?  (created and owned by $ARKHAMD_USER)
+#ARKHAMD_PIDDIR="/var/run/arkhamd"
+
+# What filename to give the pidfile
+#ARKHAMD_PIDFILE="${ARKHAMD_PIDDIR}/arkhamd.pid"
+
+# Where to write arkhamd data (be mindful that the blockchain is large)
+#ARKHAMD_DATADIR="/var/lib/arkhamd"
+
+# User and group to own arkhamd process
+#ARKHAMD_USER="arkham"
+#ARKHAMD_GROUP="arkham"
+
+# Path to arkhamd executable
+#ARKHAMD_BIN="/usr/bin/arkhamd"
+
+# Nice value to run arkhamd under
+#ARKHAMD_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#ARKHAMD_OPTS=""
+
+# The timeout in seconds OpenRC will wait for arkhamd to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+ARKHAMD_SIGTERM_TIMEOUT=600

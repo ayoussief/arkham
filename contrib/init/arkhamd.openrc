@@ -1,0 +1,93 @@
+#!/sbin/openrc-run
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/arkham/.arkham" ]; then
+	ARKHAMD_DEFAULT_DATADIR="/var/lib/arkham/.arkham"
+else
+	ARKHAMD_DEFAULT_DATADIR="/var/lib/arkhamd"
+fi
+
+ARKHAMD_CONFIGFILE=${ARKHAMD_CONFIGFILE:-/etc/arkham/arkham.conf}
+ARKHAMD_PIDDIR=${ARKHAMD_PIDDIR:-/var/run/arkhamd}
+ARKHAMD_PIDFILE=${ARKHAMD_PIDFILE:-${ARKHAMD_PIDDIR}/arkhamd.pid}
+ARKHAMD_DATADIR=${ARKHAMD_DATADIR:-${ARKHAMD_DEFAULT_DATADIR}}
+ARKHAMD_USER=${ARKHAMD_USER:-${ARKHAM_USER:-arkham}}
+ARKHAMD_GROUP=${ARKHAMD_GROUP:-arkham}
+ARKHAMD_BIN=${ARKHAMD_BIN:-/usr/bin/arkhamd}
+ARKHAMD_NICE=${ARKHAMD_NICE:-${NICELEVEL:-0}}
+ARKHAMD_OPTS="${ARKHAMD_OPTS:-${ARKHAM_OPTS}}"
+
+name="Arkham Core Daemon"
+description="Arkham cryptocurrency P2P network daemon"
+
+command="/usr/bin/arkhamd"
+command_args="-pid=\"${ARKHAMD_PIDFILE}\" \
+		-conf=\"${ARKHAMD_CONFIGFILE}\" \
+		-datadir=\"${ARKHAMD_DATADIR}\" \
+		-daemon \
+		${ARKHAMD_OPTS}"
+
+required_files="${ARKHAMD_CONFIGFILE}"
+start_stop_daemon_args="-u ${ARKHAMD_USER} \
+			-N ${ARKHAMD_NICE} -w 2000"
+pidfile="${ARKHAMD_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${ARKHAMD_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${ARKHAMD_USER}:${ARKHAMD_GROUP}" \
+	"${ARKHAMD_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${ARKHAMD_USER}:${ARKHAMD_GROUP}" \
+	"${ARKHAMD_PIDDIR}"
+
+	checkpath -f \
+	-o "${ARKHAMD_USER}:${ARKHAMD_GROUP}" \
+	-m 0660 \
+	"${ARKHAMD_CONFIGFILE}"
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if grep -qs '^rpcuser=' "${ARKHAMD_CONFIGFILE}" && \
+		! grep -qs '^rpcpassword=' "${ARKHAMD_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run arkhamd."
+		eerror "The setting must appear in ${ARKHAMD_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following "
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"Arkham Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}
