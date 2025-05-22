@@ -125,7 +125,7 @@ public:
 
             const QFontMetrics fm(fontMetrics());
             int h = lineEdit()->minimumSizeHint().height();
-            int w = GUIUtil::TextWidth(fm, ArkhamUnits::format(ArkhamUnit::BTC, ArkhamUnits::maxMoney(), false, ArkhamUnits::SeparatorStyle::ALWAYS));
+            int w = GUIUtil::TextWidth(fm, ArkhamUnits::format(ArkhamUnit::ARK, ArkhamUnits::maxMoney(), false, ArkhamUnits::SeparatorStyle::ALWAYS));
             w += 2; // cursor blinking space
 
             QStyleOptionSpinBox opt;
@@ -150,8 +150,8 @@ public:
     }
 
 private:
-    ArkhamUnit currentUnit{ArkhamUnit::BTC};
-    CAmount singleStep{CAmount(100000)}; // satoshis
+    ArkhamUnit currentUnit{ArkhamUnit::ARK};
+    CAmount singleStep{CAmount(100000)}; // arkhams
     mutable QSize cachedMinimumSizeHint;
     bool m_allow_empty{true};
     CAmount m_min_amount{CAmount(0)};

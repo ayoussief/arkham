@@ -3003,7 +3003,7 @@ Luo natiivin segwit-osoitteen (BIP-173). Jotkin vanhat lompakot eivät tue sitä
     <message>
         <source>Specify a custom fee per kB (1,000 bytes) of the transaction's virtual size.
 
-Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satoshis per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 satoshis.</source>
+Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 arkhams per kvB" for a transaction size of 500 virtual bytes (half of 1 kvB) would ultimately yield a fee of only 50 arkhams.</source>
         <translation type="unfinished">Määritä mukautettu maksu per kB (1 000 tavua) tapahtuman virtuaalikoosta.
 
 Huom: Koska maksu lasketaan per tavu, "100 satoshin per kB" maksunopeus 500 virtuaalitavun (puolet 1 kB

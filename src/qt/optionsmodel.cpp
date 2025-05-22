@@ -188,13 +188,13 @@ bool OptionsModel::Init(bilingual_str& error)
 
     // Display
     if (!settings.contains("DisplayArkhamUnit")) {
-        settings.setValue("DisplayArkhamUnit", QVariant::fromValue(ArkhamUnit::BTC));
+        settings.setValue("DisplayArkhamUnit", QVariant::fromValue(ArkhamUnit::ARK));
     }
     QVariant unit = settings.value("DisplayArkhamUnit");
     if (unit.canConvert<ArkhamUnit>()) {
         m_display_arkham_unit = unit.value<ArkhamUnit>();
     } else {
-        m_display_arkham_unit = ArkhamUnit::BTC;
+        m_display_arkham_unit = ArkhamUnit::ARK;
         settings.setValue("DisplayArkhamUnit", QVariant::fromValue(m_display_arkham_unit));
     }
 
@@ -460,7 +460,7 @@ QVariant OptionsModel::getOption(OptionID option, const std::string& suffix) con
         return QVariant::fromValue(m_font_money);
     case CoinControlFeatures:
         return fCoinControlFeatures;
-    case EnablePSBTControls:
+    case EnablePSARKontrols:
         return settings.value("enable_psbt_controls");
     case Prune:
         return PruneEnabled(setting());
@@ -641,7 +641,7 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
         settings.setValue("fCoinControlFeatures", fCoinControlFeatures);
         Q_EMIT coinControlFeaturesChanged(fCoinControlFeatures);
         break;
-    case EnablePSBTControls:
+    case EnablePSARKontrols:
         m_enable_psbt_controls = value.toBool();
         settings.setValue("enable_psbt_controls", m_enable_psbt_controls);
         break;

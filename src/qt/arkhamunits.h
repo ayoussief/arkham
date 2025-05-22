@@ -40,9 +40,9 @@ public:
       @note Source: https://en.arkham.it/wiki/Units . Please add only sensible ones
      */
     enum class Unit {
-        BTC,
-        mBTC,
-        uBTC,
+        ARK,
+        mARK,
+        uARK,
         SAT
     };
     Q_ENUM(Unit)

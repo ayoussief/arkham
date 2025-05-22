@@ -61,7 +61,7 @@ To run:
 
 * UI elements like ArkhamAmountField, which inherit from QWidget.
 * `arkhamstrings.cpp`: automatically generated
-* `arkhamunits.(h/cpp)`: BTC / mBTC / etc. handling
+* `arkhamunits.(h/cpp)`: ARK / mARK / etc. handling
 * `callback.h`
 * `guiconstants.h`: UI colors, app name, etc.
 * `guiutil.h`: several helper functions

@@ -185,7 +185,7 @@ bool parseArkhamURI(const QUrl &uri, SendCoinsRecipient *out)
         {
             if(!i->second.isEmpty())
             {
-                if (!ArkhamUnits::parse(ArkhamUnit::BTC, i->second, &rv.amount)) {
+                if (!ArkhamUnits::parse(ArkhamUnit::ARK, i->second, &rv.amount)) {
                     return false;
                 }
             }
@@ -217,7 +217,7 @@ QString formatArkhamURI(const SendCoinsRecipient &info)
 
     if (info.amount)
     {
-        ret += QString("?amount=%1").arg(ArkhamUnits::format(ArkhamUnit::BTC, info.amount, false, ArkhamUnits::SeparatorStyle::NEVER));
+        ret += QString("?amount=%1").arg(ArkhamUnits::format(ArkhamUnit::ARK, info.amount, false, ArkhamUnits::SeparatorStyle::NEVER));
         paramCount++;
     }
 

@@ -71,7 +71,7 @@ class SimulateTxTest(ArkhamTestFramework):
         tx1changepos = funding["changepos"]
         arkham_fee = Decimal(funding["fee"])
 
-        # w0 sees fee + 5 btc decrease, w2 sees + 5 btc
+        # w0 sees fee + 5 ark decrease, w2 sees + 5 ark
         assert_approx(w0.simulaterawtransaction([tx1])["balance_change"], -(Decimal("5") + arkham_fee))
         assert_approx(w2.simulaterawtransaction([tx1])["balance_change"], Decimal("5"))
 
