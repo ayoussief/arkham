@@ -71,7 +71,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    const char* pszTimestamp = "Gotham 23/May/2025 Arkhams gates swing open. The asylum is now the warden.";
+    const char* pszTimestamp = "Gotham 26/May/2025 Arkhams gates swing open. The asylum is now the warden.";
     const CScript genesisOutputScript = CScript() << "042a53e91e0e2e41ce7c9bc2d3600478aec19fffa1c049a622e80c1417f94405f392cbdfdc68dec9f715be20d91cd63a5cbc8b73c3093d98e2875e6c1a1107748a"_hex << OP_CHECKSIG;
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
@@ -81,7 +81,7 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
 // #include <vector>
 // #include <arith_uint256.h>  // Required for arith_uint256 and SetCompact()
 
-// Global atomic variables for coordination
+// //Global atomic variables for coordination
 // std::atomic<bool> genesisFound(false);
 // std::atomic<uint32_t> globalNonce(0);
 // std::atomic<uint32_t> globalTime;
@@ -116,7 +116,7 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
 // }
 
 // static CBlock CreateGenesisBlockMultithreaded(uint32_t nTime, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward) {
-//     const char* pszTimestamp = "Gotham 23/May/2025 Arkhams gates swing open. The asylum is now the warden.";
+//     const char* pszTimestamp = "Gotham 26/May/2025 Arkhams gates swing open. The asylum is now the warden.";
 //     const CScript genesisOutputScript = CScript() << "042a53e91e0e2e41ce7c9bc2d3600478aec19fffa1c049a622e80c1417f94405f392cbdfdc68dec9f715be20d91cd63a5cbc8b73c3093d98e2875e6c1a1107748a"_hex << OP_CHECKSIG;
     
 //     CBlock genesis = CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, 0, nBits, nVersion, genesisReward);
@@ -134,7 +134,7 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
 //     globalTime = nTime;
     
 //     // Launch threads with the correct step size
-//     for (int i = 0; i < numThreads; ++i) {
+//     for (unsigned int i = 0; i < numThreads; ++i) {
 //         threads.emplace_back(MineGenesisBlockThread, genesis, hashTarget, i, numThreads);
 //     }
 
@@ -171,22 +171,23 @@ public:
         consensus.signet_challenge.clear();
         consensus.nSubsidyHalvingInterval = 210000;
         consensus.script_flag_exceptions.emplace( // BIP16 exception
-            uint256{"00000000000002dc756eebf4f49723ed8d30cc28a5f108eb94b1ba88ac4f9c22"}, SCRIPT_VERIFY_NONE);
+            uint256{"0000000092676d5917696496f0f86512169cd9ffe62a622de6ab71b64f82f5a7"}, SCRIPT_VERIFY_NONE);
         consensus.script_flag_exceptions.emplace( // Taproot exception
-            uint256{"0000000000000000000f14c35b2d841e986ab5441de8c585d5ffe55ea1e395ad"}, SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS);
+            uint256{"0000000092676d5917696496f0f86512169cd9ffe62a622de6ab71b64f82f5a7"}, SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS);
         consensus.BIP34Height    = 0;
         consensus.BIP34Hash = uint256{"0000000092676d5917696496f0f86512169cd9ffe62a622de6ab71b64f82f5a7"};
         consensus.BIP65Height    = 0;
         consensus.BIP66Height    = 0;
         consensus.CSVHeight      = 0;
         consensus.SegwitHeight = 0;
-        consensus.MinBIP9WarningHeight = 483840; // segwit activation height + miner confirmation window
+        consensus.MinBIP9WarningHeight = 0; // segwit activation height + miner confirmation window
         consensus.powLimit = uint256{"00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
         consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
         consensus.nPowTargetSpacing = 10 * 60;
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.enforce_BIP94 = false;
         consensus.fPowNoRetargeting = false;
+
 
         // something..
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -197,12 +198,14 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].period = 2016;
 
         // Deployment of Taproot (BIPs 340-342)
+        // Instantly activate Taproot (for testchains like regtest)
         consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].bit = 2;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = 1619222400; // April 24th, 2021
-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = 1628640000; // August 11th, 2021
-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 709632; // Approximately November 12th, 2021
-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].threshold = 1815; // 90%
-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].period = 2016;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = Consensus::BIP9Deployment::ALWAYS_ACTIVE;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].threshold = 1;
+        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].period = 1;
+
 
         // consensus.nMinimumChainWork = uint256{"0000000000000000000000000000000000000000b1f3b93b65b16d035a82be84"};
         consensus.nMinimumChainWork = uint256{0};
@@ -223,9 +226,9 @@ public:
         m_assumed_blockchain_size = 720;
         m_assumed_chain_state_size = 14;
 
-        // Use current time and your desired difficulty
+        // // Use current time and your desired difficulty
         // uint32_t current_time = static_cast<uint32_t>(time(nullptr));
-        // genesis = CreateGenesisBlockMultithreaded(current_time, 0x1d00ffff, 1, 50 * COIN);
+        // genesis = CreateGenesisBlockMultithreaded(current_time, 0x1d00ffff, 0x20000006, 50 * COIN);
         // consensus.hashGenesisBlock = genesis.GetHash();
 
         // // Verify
@@ -235,10 +238,10 @@ public:
         // printf("hashGenesisBlock = %s\n", consensus.hashGenesisBlock.ToString().c_str());
         // printf("hashMerkleRoot = %s\n\n", genesis.hashMerkleRoot.ToString().c_str());
 
-        genesis = CreateGenesisBlock(1747951434, 750637037, 0x1d00ffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1748261859, 2467170680, 0x1d00ffff, 0x20000006, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"0000000092676d5917696496f0f86512169cd9ffe62a622de6ab71b64f82f5a7"});
-        assert(genesis.hashMerkleRoot == uint256{"d2187eb4567636b9998d9e9e11c082b72c9b9a4962e4bbe735878d7a10aee461"});
+        assert(consensus.hashGenesisBlock == uint256{"00000000c0a70c07fc62b3e53c7c042431ccf533ceaf50533f2f77ef32930134"});
+        assert(genesis.hashMerkleRoot == uint256{"94f7ddbdedc47c2e2ca4901a342c6a7217354a685227e8b89c8e8ed9d6c85080"});
 
         // Note that of those which support the service bits prefix, most only support a subset of
         // possible options.
