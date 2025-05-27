@@ -71,7 +71,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    const char* pszTimestamp = "Gotham 26/May/2025 Arkhams gates swing open. The asylum is now the warden.";
+    const char* pszTimestamp = "Gotham 27/May/2025 Arkhams gates swing open. The asylum is now the warden.";
     const CScript genesisOutputScript = CScript() << "042a53e91e0e2e41ce7c9bc2d3600478aec19fffa1c049a622e80c1417f94405f392cbdfdc68dec9f715be20d91cd63a5cbc8b73c3093d98e2875e6c1a1107748a"_hex << OP_CHECKSIG;
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
@@ -116,7 +116,7 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
 // }
 
 // static CBlock CreateGenesisBlockMultithreaded(uint32_t nTime, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward) {
-//     const char* pszTimestamp = "Gotham 26/May/2025 Arkhams gates swing open. The asylum is now the warden.";
+//     const char* pszTimestamp = "Gotham 27/May/2025 Arkhams gates swing open. The asylum is now the warden.";
 //     const CScript genesisOutputScript = CScript() << "042a53e91e0e2e41ce7c9bc2d3600478aec19fffa1c049a622e80c1417f94405f392cbdfdc68dec9f715be20d91cd63a5cbc8b73c3093d98e2875e6c1a1107748a"_hex << OP_CHECKSIG;
     
 //     CBlock genesis = CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, 0, nBits, nVersion, genesisReward);
@@ -170,15 +170,11 @@ public:
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
         consensus.nSubsidyHalvingInterval = 210000;
-        consensus.script_flag_exceptions.emplace( // BIP16 exception
-            uint256{"0000000092676d5917696496f0f86512169cd9ffe62a622de6ab71b64f82f5a7"}, SCRIPT_VERIFY_NONE);
-        consensus.script_flag_exceptions.emplace( // Taproot exception
-            uint256{"0000000092676d5917696496f0f86512169cd9ffe62a622de6ab71b64f82f5a7"}, SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS);
-        consensus.BIP34Height    = 0;
-        consensus.BIP34Hash = uint256{"0000000092676d5917696496f0f86512169cd9ffe62a622de6ab71b64f82f5a7"};
-        consensus.BIP65Height    = 0;
-        consensus.BIP66Height    = 0;
-        consensus.CSVHeight      = 0;
+        consensus.BIP34Height    = 1;
+        consensus.BIP34Hash = uint256{};
+        consensus.BIP65Height    = 1;
+        consensus.BIP66Height    = 1;
+        consensus.CSVHeight      = 1;
         consensus.SegwitHeight = 0;
         consensus.MinBIP9WarningHeight = 0; // segwit activation height + miner confirmation window
         consensus.powLimit = uint256{"00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff"};
@@ -187,7 +183,6 @@ public:
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.enforce_BIP94 = false;
         consensus.fPowNoRetargeting = false;
-
 
         // something..
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -238,10 +233,10 @@ public:
         // printf("hashGenesisBlock = %s\n", consensus.hashGenesisBlock.ToString().c_str());
         // printf("hashMerkleRoot = %s\n\n", genesis.hashMerkleRoot.ToString().c_str());
 
-        genesis = CreateGenesisBlock(1748261859, 2467170680, 0x1d00ffff, 0x20000006, 50 * COIN);
+        genesis = CreateGenesisBlock(1748309400, 223538377, 0x1d00ffff, 0x20000006, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"00000000c0a70c07fc62b3e53c7c042431ccf533ceaf50533f2f77ef32930134"});
-        assert(genesis.hashMerkleRoot == uint256{"94f7ddbdedc47c2e2ca4901a342c6a7217354a685227e8b89c8e8ed9d6c85080"});
+        assert(consensus.hashGenesisBlock == uint256{"0000000002a9109e10191eb60d3e4d65c26ec53de2147f9e0075c61dfa33cc4a"});
+        assert(genesis.hashMerkleRoot == uint256{"19d32b3373408785aec950ebca2aa719241e71a22a43a2919473a0b51e3e6c3c"});
 
         // Note that of those which support the service bits prefix, most only support a subset of
         // possible options.
