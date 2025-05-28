@@ -174,7 +174,6 @@ public:
             uint256{"0000000056d2d3182fb910bbef2556e00a4f0db311bd8ef6d5c08ab21dc39165"}, SCRIPT_VERIFY_NONE);
         consensus.script_flag_exceptions.emplace( // Taproot exception
             uint256{"0000000056d2d3182fb910bbef2556e00a4f0db311bd8ef6d5c08ab21dc39165"}, SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_WITNESS);
-        consensus.BIP34Height = 227931;
         consensus.BIP34Height    = 1;
         consensus.BIP34Hash = uint256{"0000000056d2d3182fb910bbef2556e00a4f0db311bd8ef6d5c08ab21dc39165"};
         consensus.BIP65Height    = 1;
